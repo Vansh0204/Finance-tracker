@@ -4,6 +4,8 @@ let user = null;
 let spendingChart = null;
 
 
+
+
 // DOM Elements
 const authSection = document.getElementById('auth-section');
 const dashboardSection = document.getElementById('dashboard-section');
@@ -17,6 +19,8 @@ const authSubmit = document.getElementById('auth-submit');
 if (token) {
     checkAuth();
 }
+
+
 
 toggleAuth.onclick = (e) => {
     e.preventDefault();
