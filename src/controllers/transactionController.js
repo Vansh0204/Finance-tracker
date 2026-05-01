@@ -2,12 +2,13 @@ const prisma = require('../utils/prisma');
 
 const createTransaction = async (req, res) => {
   try {
-    const { amount, description, date, type, categoryId } = req.body;
+    const { amount, description, date, type, categoryId, currency } = req.body;
     const receiptUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
     const transaction = await prisma.transaction.create({
       data: {
         amount: parseFloat(amount),
+        currency: currency || 'USD',
         description,
         date: date ? new Date(date) : new Date(),
         type,
@@ -16,6 +17,7 @@ const createTransaction = async (req, res) => {
         receiptUrl
       },
     });
+
 
     res.status(201).send(transaction);
   } catch (e) {

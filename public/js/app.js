@@ -2,6 +2,8 @@ const API_URL = '/api';
 let token = localStorage.getItem('token');
 let user = null;
 let spendingChart = null;
+const CURRENCY_SYMBOLS = { 'USD': '$', 'INR': '₹', 'EUR': '€', 'GBP': '£' };
+
 
 
 
@@ -193,10 +195,12 @@ async function loadSummary() {
         headers: { 'Authorization': `Bearer ${token}` }
     });
     const data = await res.json();
-    document.getElementById('total-balance').innerText = `$${data.balance.toFixed(2)}`;
-    document.getElementById('total-income').innerText = `$${data.totalIncome.toFixed(2)}`;
-    document.getElementById('total-expense').innerText = `$${data.totalExpense.toFixed(2)}`;
+    const symbol = CURRENCY_SYMBOLS[user?.currency] || '$';
+    document.getElementById('total-balance').innerText = `${symbol}${data.balance.toFixed(2)}`;
+    document.getElementById('total-income').innerText = `${symbol}${data.totalIncome.toFixed(2)}`;
+    document.getElementById('total-expense').innerText = `${symbol}${data.totalExpense.toFixed(2)}`;
 }
+
 
 
 async function loadCategories() {
@@ -286,8 +290,9 @@ async function loadTransactions() {
             <td>${t.description || '-'}</td>
             <td>${t.category.name}</td>
             <td class="${t.type === 'INCOME' ? 'income' : 'expense'}">
-                ${t.type === 'INCOME' ? '+' : '-'}$${Math.abs(t.amount).toFixed(2)}
+                ${t.type === 'INCOME' ? '+' : '-'}${CURRENCY_SYMBOLS[t.currency] || '$'}${Math.abs(t.amount).toFixed(2)}
             </td>
+
             <td>
                 ${t.receiptUrl ? `<a href="${t.receiptUrl}" target="_blank" style="color: var(--primary); font-size: 12px;">View</a>` : '-'}
             </td>
@@ -322,6 +327,7 @@ document.getElementById('transaction-form').onsubmit = async (e) => {
     const amount = document.getElementById('t-amount').value;
     const description = document.getElementById('t-description').value;
     const type = document.getElementById('t-type').value;
+    const currency = document.getElementById('t-currency').value;
     const categoryId = document.getElementById('t-category').value;
     const receiptFile = document.getElementById('t-receipt').files[0];
     
@@ -329,7 +335,9 @@ document.getElementById('transaction-form').onsubmit = async (e) => {
     formData.append('amount', amount);
     formData.append('description', description);
     formData.append('type', type);
+    formData.append('currency', currency);
     formData.append('categoryId', categoryId);
+
     if (receiptFile) formData.append('receipt', receiptFile);
     
     await fetch(`${API_URL}/transactions`, {
