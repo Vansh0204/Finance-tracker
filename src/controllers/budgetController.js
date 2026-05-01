@@ -2,12 +2,14 @@ const prisma = require('../utils/prisma');
 
 const setBudget = async (req, res) => {
   try {
-    const { categoryId, amount, month, year } = req.body;
+    const { categoryId, amount } = req.body;
     const userId = req.user.id;
+    const month = req.body.month || new Date().getMonth() + 1;
+    const year = req.body.year || new Date().getFullYear();
 
     const budget = await prisma.budget.upsert({
       where: {
-        userId_categoryId_month_year: {
+        categoryId_month_year_userId: {
           userId,
           categoryId,
           month,
@@ -25,6 +27,7 @@ const setBudget = async (req, res) => {
     });
 
     res.status(201).send(budget);
+
   } catch (e) {
     res.status(400).send(e);
   }
