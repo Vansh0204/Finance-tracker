@@ -9,20 +9,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </head>
 <body>
-    <nav class="nav">
-        <h2>FinanceTracker</h2>
-        <div id="user-info" class="hidden">
-            <span id="user-name"></span>
-            <button onclick="logout()">Logout</button>
-        </div>
-    </nav>
-
-    <div class="container">
-        <!-- Auth Forms -->
-        <div id="auth-section" class="auth-form card">
+    <div id="auth-section" class="auth-form">
+        <div class="card">
             <h2 id="auth-title">Login</h2>
             <form id="auth-form">
                 <input type="email" id="email" placeholder="Email" required>
@@ -38,25 +28,35 @@
                 <a href="#" id="toggle-auth" style="color: var(--primary);">Need an account? Register</a>
             </p>
         </div>
+    </div>
 
-        <!-- Dashboard -->
-        <div id="dashboard-section" class="hidden">
+    <div id="dashboard-section" class="hidden">
+        <nav class="nav">
+            <h2 style="margin: 0;">FinanceTracker</h2>
+            <div id="user-info" class="hidden" style="display: flex; align-items: center; gap: 1rem;">
+                <span id="user-name"></span>
+                <button onclick="logout()" style="background: var(--primary); padding: 0.5rem 1rem;">Logout</button>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- Summary Cards -->
             <div class="grid">
                 <div class="card summary-card">
                     <h3>Total Balance</h3>
-                    <p id="total-balance">$0.00</p>
+                    <p id="total-balance">zsh.00</p>
                 </div>
                 <div class="card summary-card">
                     <h3>Income</h3>
-                    <p id="total-income" class="income">$0.00</p>
+                    <p id="total-income" class="income">zsh.00</p>
                 </div>
                 <div class="card summary-card">
                     <h3>Expenses</h3>
-                    <p id="total-expense" class="expense">$0.00</p>
+                    <p id="total-expense" class="expense">zsh.00</p>
                 </div>
             </div>
 
-            <div class="grid" style="grid-template-columns: 2fr 1fr; margin-bottom: 2rem;">
+            <div class="grid" style="grid-template-columns: 2fr 1fr;">
                 <div class="card">
                     <h3>Spending by Category</h3>
                     <div style="height: 300px; display: flex; justify-content: center;">
@@ -80,17 +80,18 @@
                     <form id="transaction-form">
                         <input type="number" id="t-amount" placeholder="Amount" step="0.01" required>
                         <input type="text" id="t-description" placeholder="Description">
-                        <select id="t-type">
-                            <option value="INCOME">Income</option>
-                            <option value="EXPENSE">Expense</option>
-                        </select>
-                        <select id="t-currency" required>
-                            <option value="USD">USD ($)</option>
-                            <option value="INR">INR (₹)</option>
-                            <option value="EUR">EUR (€)</option>
-                            <option value="GBP">GBP (£)</option>
-                        </select>
-
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;">
+                            <select id="t-type" style="margin-bottom: 0;">
+                                <option value="EXPENSE">Expense</option>
+                                <option value="INCOME">Income</option>
+                            </select>
+                            <select id="t-currency" style="margin-bottom: 0;" required>
+                                <option value="USD">USD ($)</option>
+                                <option value="INR">INR (₹)</option>
+                                <option value="EUR">EUR (€)</option>
+                                <option value="GBP">GBP (£)</option>
+                            </select>
+                        </div>
                         <select id="t-category" required>
                             <option value="">Select Category</option>
                         </select>
@@ -107,14 +108,14 @@
                 <div class="card">
                     <h3>Categories</h3>
                     <form id="category-form" style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-                        <input type="text" id="c-name" placeholder="Category Name" required style="margin-bottom: 0;">
-                        <select id="c-type" style="margin-bottom: 0;">
-                            <option value="EXPENSE">Expense</option>
-                            <option value="INCOME">Income</option>
+                        <input type="text" id="c-name" placeholder="Name" required style="margin-bottom: 0; flex: 1;">
+                        <select id="c-type" style="margin-bottom: 0; width: 100px;">
+                            <option value="EXPENSE">Exp</option>
+                            <option value="INCOME">Inc</option>
                         </select>
                         <button type="submit">Add</button>
                     </form>
-                    <ul id="category-list" style="list-style: none; padding: 0;"></ul>
+                    <ul id="category-list" style="list-style: none; padding: 0; max-height: 200px; overflow-y: auto;"></ul>
                 </div>
             </div>
 
